@@ -1,0 +1,1 @@
+"C:\Program Files\Microsoft SDKs\Windows\v6.0A\Bin\RC.Exe" "Y:\LocalProjects\File Randomiser\File Randomiser\File Randomiser\File Randomiser.rc"

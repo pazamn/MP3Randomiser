@@ -1,0 +1,78 @@
+﻿<Window x:Class="FileRandomiser.Window.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow"
+        Title="File Randomiser v1.16"
+        Width="700" Height="330" MinWidth="700" MinHeight="330" MaxWidth="700" MaxHeight="330">
+    
+    <Window.Resources>
+        <Style x:Key="RandomiserControl" TargetType="Control">
+            <Setter Property="Margin" Value="5 5 5 0"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style x:Key="RandomiserTextBlock" TargetType="TextBlock">
+            <Setter Property="Margin" Value="5 5 5 0"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="9*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource RandomiserTextBlock}" Text="Source folder" IsEnabled="{Binding IsEnabled}"/>
+        <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource RandomiserControl}" Text="{Binding SourceFolder}" IsEnabled="{Binding IsEnabled}"/>
+        <Button Grid.Row="1" Grid.Column="2" Content="..." Style="{StaticResource RandomiserControl}" Click="SelectSourceFolder" Margin="0 5 5 0" IsEnabled="{Binding IsEnabled}"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource RandomiserTextBlock}" Text="Target folder" IsEnabled="{Binding IsEnabled}"/>
+        <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource RandomiserControl}" Text="{Binding TargetFolder}" IsEnabled="{Binding IsEnabled}"/>
+        <Button Grid.Row="3" Grid.Column="2" Content="..." Style="{StaticResource RandomiserControl}" Click="SelectTargetFolder" Margin="0 5 5 0" IsEnabled="{Binding IsEnabled}"/>
+
+        <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" IsChecked="{Binding ClearBefore}" Content="Clear folder before randomizing" Style="{StaticResource RandomiserControl}" IsEnabled="{Binding IsEnabled}"/>
+
+        <CheckBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" IsChecked="{Binding SplitByFolders}" Content="Split by subfolders (files in each subfolder):" Style="{StaticResource RandomiserControl}" IsEnabled="{Binding IsEnabled}"/>
+        <TextBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding SplitBy}" Width="100" Style="{StaticResource RandomiserControl}" HorizontalAlignment="Left" Margin="28 5 5 0" IsEnabled="{Binding IsEnabled}"/>
+
+        <CheckBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" IsChecked="{Binding ClearID3Tags}" Content="Clear ID3 tags" Style="{StaticResource RandomiserControl}" IsEnabled="{Binding IsEnabled}"/>
+
+        <TextBlock Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" Text="Formats of copying files" Style="{StaticResource RandomiserTextBlock}" IsEnabled="{Binding IsEnabled}"/>
+        <TextBox Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding CopyingFormats}" Margin="28 5 5 0" Width="100" Style="{StaticResource RandomiserControl}" HorizontalAlignment="Left" IsEnabled="{Binding IsEnabled}"/>
+        
+        <Button Grid.Row="10" Grid.Column="0" Click="Randomise" Margin="5 5 2.5 5" Height="35" IsEnabled="{Binding IsEnabled}"
+                HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Randomise" Style="{StaticResource RandomiserTextBlock}" FontWeight="Bold" Visibility="{Binding TextBlockVisibility}" HorizontalAlignment="Center"/>
+
+                <ProgressBar Grid.Row="0" Grid.Column="0" Minimum="0" Maximum="{Binding MaxValue}" Value="{Binding Progress}" IsIndeterminate="{Binding InfiniteProgress}" Visibility="{Binding ProgressBarVisibility}"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Randomising in progress..." Visibility="{Binding ProgressBarVisibility}" Style="{StaticResource RandomiserTextBlock}" HorizontalAlignment="Center"/>
+            </Grid>
+        </Button>
+        <Button Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="2" Content="Close" Click="Close" Margin="2.5 5 5 5" Style="{StaticResource RandomiserControl}" Height="35"/>
+    </Grid>
+</Window>
