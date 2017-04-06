@@ -1,8 +1,6 @@
-﻿using System.Windows;
-
-namespace FileRandomiser.Window
+﻿namespace FileRandomiser.Window
 {
-    public partial class App : Application
+    public partial class App
     {
     }
 }

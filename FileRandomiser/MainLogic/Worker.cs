@@ -8,25 +8,27 @@ using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace FileRandomiser.MainLogic
 {
-    public static class Worker
+    public class Worker
     {
-        public static void Randomize(MainWindowViewModel viewModel)
+        public event EventHandler RandomisingCompleted;
+
+        public void Randomize(MainWindowViewModel viewModel)
         {
             try
             {
                 if (!Directory.Exists(viewModel.SourceFolder))
                 {
-                    throw new Exception(string.Format("Source directory {0} does not exist.", viewModel.SourceFolder));
+                    throw new Exception($"Source directory {viewModel.SourceFolder} does not exist.");
                 }
 
                 if (!Directory.Exists(viewModel.TargetFolder))
                 {
-                    throw new Exception(string.Format("Target directory {0} does not exist.", viewModel.TargetFolder));
+                    throw new Exception($"Target directory {viewModel.TargetFolder} does not exist.");
                 }
 
                 if (viewModel.SplitByFolders && viewModel.SplitBy <= 0)
                 {
-                    throw new Exception(string.Format("Split by value is invalid: {0}.", viewModel.SplitBy));
+                    throw new Exception($"Split by value is invalid: {viewModel.SplitBy}.");
                 }
 
                 viewModel.InfiniteProgress = true;
@@ -65,7 +67,7 @@ namespace FileRandomiser.MainLogic
 
                 foreach (var file in loadingFiles)
                 {
-                    var currentDirectoryName = string.Format("D{0}", splittedDirectoryNumber.ToString().PadLeft(directoriesPadCount, '0'));
+                    var currentDirectoryName = $"D{splittedDirectoryNumber.ToString().PadLeft(directoriesPadCount, '0')}";
                     var currentDirectoryPath = Path.Combine(viewModel.TargetFolder, currentDirectoryName);
                     if (!Directory.Exists(currentDirectoryPath))
                     {
@@ -80,7 +82,7 @@ namespace FileRandomiser.MainLogic
                     }
 
                     var index = loadingFiles.IndexOf(file);
-                    var fileName = string.Format("R{0}_{1}", index.ToString().PadLeft(filesPadCount, '0'), Path.GetFileName(file));
+                    var fileName = $"R{index.ToString().PadLeft(filesPadCount, '0')}_{Path.GetFileName(file)}";
                     var filePath = Path.Combine(viewModel.TargetFolder, currentDirectoryName, fileName);
 
                     File.Copy(file, filePath);
@@ -91,10 +93,15 @@ namespace FileRandomiser.MainLogic
 
                 viewModel.InfiniteProgress = false;
                 viewModel.Progress = 0;
+
+                if (RandomisingCompleted != null)
+                {
+                    RandomisingCompleted.Invoke(this, EventArgs.Empty);
+                }
             }
             catch (Exception e)
             {
-                var message = string.Format("Exception occured.\r\n{0}\r\n{1}", e.GetType().Name, e.Message);
+                var message = $"Exception occured.\r\n{e.GetType().Name}\r\n{e.Message}";
                 MessageBox.Show(message, "Fatal error.", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

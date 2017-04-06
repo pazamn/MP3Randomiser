@@ -116,7 +116,7 @@ namespace FileRandomiser.Window
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
@@ -142,7 +142,7 @@ namespace FileRandomiser.Window
                 throw new ArgumentNullException("selectorExpression");
             }
 
-            MemberExpression body = selectorExpression.Body as MemberExpression;
+            var body = selectorExpression.Body as MemberExpression;
             if (body == null)
             {
                 throw new ArgumentException("The body must be a member expression");

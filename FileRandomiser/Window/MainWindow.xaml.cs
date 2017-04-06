@@ -13,12 +13,14 @@ namespace FileRandomiser.Window
     {
         #region Private Things and Initialization
 
-        private MainWindowViewModel ViewModel { get; set; }
+        private MainWindowViewModel ViewModel { get; }
+        private Worker Worker { get; }
 
         public MainWindow()
         {
             ViewModel = new MainWindowViewModel();
             DataContext = ViewModel;
+            Worker = new Worker();
 
             InitializeBaseValues();
             InitializeComponent();
@@ -32,7 +34,7 @@ namespace FileRandomiser.Window
             ViewModel.SourceFolder = sourceDrive != null ? Path.Combine(sourceDrive.RootDirectory.FullName, "Music") : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             ViewModel.TargetFolder = targetDrive != null ? targetDrive.RootDirectory.FullName : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            ViewModel.ClearBefore = false;
+            ViewModel.ClearBefore = true;
             ViewModel.SplitByFolders = true;
             ViewModel.SplitBy = 100;
             ViewModel.CopyingFormats = "mp3, wma";
@@ -72,7 +74,24 @@ namespace FileRandomiser.Window
             ViewModel.TextBlockVisibility = Visibility.Collapsed;
             ViewModel.ProgressBarVisibility = Visibility.Visible;
 
+            Worker.RandomisingCompleted -= OnWorkerRandomisingCompleted;
+            Worker.RandomisingCompleted += OnWorkerRandomisingCompleted;
+
             Task.Factory.StartNew(() => Worker.Randomize(ViewModel));
+        }
+
+        private void OnWorkerRandomisingCompleted(object sender, EventArgs eventArgs)
+        {
+            Dispatcher.Invoke(NotifyRandomisingCompleted);
+        }
+
+        private void NotifyRandomisingCompleted()
+        {
+            ViewModel.IsEnabled = true;
+            ViewModel.TextBlockVisibility = Visibility.Visible;
+            ViewModel.ProgressBarVisibility = Visibility.Collapsed;
+
+            MessageBox.Show("Randomising completed", Title, MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void Close(object sender, RoutedEventArgs e)
